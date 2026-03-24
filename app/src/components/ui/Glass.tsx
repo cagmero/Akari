@@ -23,7 +23,7 @@ export const GlassCard = React.forwardRef<
       ref={ref}
       className={cn(
         variantClass,
-        "rounded-3xl p-6 md:p-8 relative overflow-hidden",
+        "rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden",
         className
       )}
       {...props}
@@ -43,17 +43,17 @@ export const GlassButton = React.forwardRef<
     default:
       "liquid-glass liquid-glass-hover text-[#3b4044]",
     accent:
-      "bg-gradient-to-r from-[#d95000] to-[#e67e22] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5",
+      "bg-gradient-to-r from-[#d95000] to-[#ffb43f] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5",
     dark:
-      "bg-gradient-to-r from-[#3b4044] to-[#4a5056] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5",
+      "bg-gradient-to-r from-[#3b4044] to-[#4a5056] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5",
   };
 
   return (
     <button
       ref={ref}
       className={cn(
-        "rounded-2xl px-6 py-3.5 font-semibold text-sm transition-all duration-300",
-        "disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97]",
+        "rounded-2xl px-10 py-5 font-black text-sm transition-all duration-300",
+        "disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]",
         variantClasses[variant],
         className
       )}
@@ -71,9 +71,9 @@ export const GlassInput = React.forwardRef<
   <input
     ref={ref}
     className={cn(
-      "w-full bg-white/40 border border-white/50 rounded-2xl px-5 py-4 text-lg font-medium",
-      "outline-none focus:ring-2 focus:ring-[#e3be81]/60 focus:border-[#e3be81]/40",
-      "transition-all duration-300 placeholder:text-[#3b4044]/30",
+      "w-full bg-white/40 border border-white/60 rounded-2xl px-8 py-5 text-2xl font-black",
+      "outline-none focus:ring-2 focus:ring-[#e3be81]/50 focus:border-[#e3be81]/30",
+      "transition-all duration-300 placeholder:text-[#3b4044]/25",
       className
     )}
     {...props}
@@ -92,7 +92,7 @@ export function GlassBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold",
+        "inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em]",
         "liquid-glass-subtle",
         className
       )}
@@ -117,23 +117,23 @@ export function SectionHeading({
   description?: string;
 }) {
   return (
-    <div className="text-center max-w-2xl mx-auto">
+    <div className="text-center max-w-4xl mx-auto px-6 mb-16 md:mb-24">
       {badge && (
-        <GlassBadge className="mb-5 text-[#3b4044]/60">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#d95000]" />
+        <GlassBadge className="mb-8 text-[#3b4044]/60">
+          <div className="w-2 h-2 rounded-full bg-[#d95000] shadow-[0_0_10px_rgba(217,80,0,0.6)]" />
           {badge}
         </GlassBadge>
       )}
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-5">
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.95] mb-10">
         {title}{" "}
         {highlight && (
-          <span className={highlightClass || "gradient-text-accent"}>
+          <span className={cn("gradient-text-accent", highlightClass)}>
             {highlight}
           </span>
         )}
       </h1>
       {description && (
-        <p className="text-[#3b4044]/60 text-base md:text-lg max-w-xl mx-auto leading-relaxed font-medium">
+        <p className="text-[#3b4044]/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-bold">
           {description}
         </p>
       )}

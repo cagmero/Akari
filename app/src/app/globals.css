@@ -1,152 +1,130 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 @import "tailwindcss";
-@source "../../";  
+
+@source "../**/*.{ts,tsx}";
 
 @theme {
-  --color-background: #f4ecde;
+  --color-primary: #f4ecde;
+  --color-accent: #e3be81;
   --color-foreground: #3b4044;
-  --color-primary: #e3be81;
-  --color-primary-foreground: #ffffff;
-  --color-accent: #d95000;
-  --color-accent-secondary: #d357fe;
-  --color-card: rgba(255, 255, 255, 0.35);
-  --color-card-foreground: #3b4044;
-  --color-border: rgba(255, 255, 255, 0.45);
-  --color-ring: #e3be81;
-  --radius: 1.5rem;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
 }
 
-/* ──── Base ──── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ─── BASE STYLES ─── */
+:root {
+  --glass-blur: 24px;
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-bg: rgba(255, 255, 255, 0.18);
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  /* No specific base styles needed here as theme handles colors/fonts */
 }
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  min-height: 100vh;
-  font-family: var(--font-sans);
-  letter-spacing: -0.01em;
-  overflow-x: hidden;
+/* ─── UTILITIES ─── */
+@layer utilities {
+  .liquid-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(59, 64, 68, 0.04);
+  }
+
+  .liquid-glass-strong {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 12px 48px 0 rgba(59, 64, 68, 0.08);
+  }
+
+  .liquid-glass-subtle {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .gradient-text-accent {
+    background: linear-gradient(135deg, #d95000 0%, #ffb43f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-text-purple {
+    background: linear-gradient(135deg, #d357fe 0%, #9b59b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hover Effects */
+  .liquid-glass-hover {
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .liquid-glass-hover:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px 0 rgba(59, 64, 68, 0.12);
+  }
+
+  /* Layout Helpers */
+  .container-wide {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* Vertical Spacing */
+  .section-spacing {
+    margin-top: 6rem;
+    margin-bottom: 6rem;
+  }
+  
+  @media (min-width: 768px) {
+    .section-spacing {
+      margin-top: 10rem;
+      margin-bottom: 10rem;
+    }
+  }
 }
 
-::selection {
-  background: rgba(227, 190, 129, 0.35);
-}
-
-/* ──── Liquid Glass System ──── */
-.liquid-glass {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 255, 255, 0.18) 100%
-  );
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.liquid-glass-strong {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 100%
-  );
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
-  backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow:
-    0 12px 48px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-.liquid-glass-subtle {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  backdrop-filter: blur(12px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-/* ──── Glass Hover ──── */
-.liquid-glass-hover {
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.liquid-glass-hover:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(255, 255, 255, 0.32) 100%
-  );
-  box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.7);
-}
-
-/* ──── Gradient Text ──── */
-.gradient-text-accent {
-  background: linear-gradient(135deg, #d95000 0%, #ffb43f 60%, #e3be81 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-purple {
-  background: linear-gradient(135deg, #d357fe 0%, #9b59b6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ──── Scrollbar ──── */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f4ecde;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 64, 68, 0.15);
-  border-radius: 999px;
+  background: #e3be81;
+  border-radius: 10px;
+  border: 2px solid #f4ecde;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 64, 68, 0.3);
+  background: #3b4044;
 }
 
-/* ──── Input Styles ──── */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Number input fix */
 input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
