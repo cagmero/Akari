@@ -105,7 +105,7 @@ export default function Home() {
           </div>
 
           {/* Overlay Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -165,7 +165,7 @@ export default function Home() {
           </div>
 
           {/* Elegant bottom fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f4ecde] to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f4ecde] to-transparent z-10 pointer-events-none" />
         </div>
       </section>
 
