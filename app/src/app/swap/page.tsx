@@ -88,7 +88,6 @@ export default function SwapPage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <SectionHeading
-            badge="Jupiter Aggregator"
             title="Treasury"
             highlight="FX Swaps"
             highlightClass="gradient-text-purple"
@@ -199,28 +198,6 @@ export default function SwapPage() {
             </GlassCard>
           </motion.div>
 
-          {/* Info card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <GlassCard variant="subtle" className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-[#e3be81]/20 mt-0.5 border border-[#e3be81]/20 shadow-sm">
-                  <Info className="w-5 h-5 text-[#e3be81]" strokeWidth={2.5} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-black mb-1.5 text-[#3b4044]">Infrastructure Note</h4>
-                  <p className="text-xs text-[#3b4044]/50 leading-relaxed font-bold">
-                    Jupiter Aggregator identifies the most capital-efficient route across all Solana liquidity. 
-                    Execution is managed by Akari&apos;s <code className="text-[10px] bg-white/60 px-2 py-0.5 rounded font-mono border border-white/80">proxy_swap</code> 
-                    system for full transparency.
-                  </p>
-                </div>
-              </div>
-            </GlassCard>
-          </motion.div>
         </div>
       </div>
     </div>

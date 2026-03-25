@@ -78,7 +78,6 @@ export default function DepositPage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <SectionHeading
-            badge="Kamino Finance"
             title="Institutional"
             highlight="Yield"
             description="Deploy idle treasury capital into Kamino Finance risk-adjusted lending pools via Akari dynamic proxy CPIs."

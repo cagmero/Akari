@@ -24,16 +24,19 @@ export function Navbar() {
       className="fixed top-0 left-0 w-full z-50 px-4 pt-6 md:px-8 md:pt-8 pointer-events-none"
     >
       <div className="container-wide flex justify-center">
-        <div className="liquid-glass-strong rounded-[2rem] px-8 py-4 md:px-12 md:py-6 flex items-center justify-between w-full max-w-6xl shadow-2xl pointer-events-auto">
+        <div className="liquid-glass-strong rounded-[1.5rem] px-8 py-3 md:px-10 md:py-4 flex items-center justify-between w-full max-w-6xl shadow-2xl pointer-events-auto">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-4 group">
-            <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#d95000] to-[#ffb43f] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-              <div className="w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_10px_white]" />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#e3be81] border-2 border-white" />
-            </div>
-            <span className="text-2xl font-black tracking-tighter text-[#3b4044]">
-              Akari
-            </span>
+          <Link href="/" className="flex flex-col items-center group transition-all duration-300 -my-4 relative z-10">
+            <img
+              src="/akari_icon_logo.svg"
+              alt="Akari Icon"
+              className="w-16 h-16 object-contain transition-transform duration-500 group-hover:scale-110"
+            />
+            <img
+              src="/akari_english_logo.svg"
+              alt="Akari"
+              className="h-8 object-contain -mt-4.5"
+            />
           </Link>
 
           {/* Desktop Nav */}

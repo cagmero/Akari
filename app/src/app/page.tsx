@@ -107,14 +107,18 @@ export default function Home() {
           {/* Overlay Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-12 sm:mb-16"
             >
-              <GlassBadge className="mb-8 text-[#3b4044]/60 bg-white/40 border-white/60">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
-                Secured by Akari Protocol
-              </GlassBadge>
+              <div className="relative group">
+                <img
+                  src="/akari_japanese_logo.svg"
+                  alt="Akari Japanese Branding"
+                  className="h-32 md:h-56 object-contain transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
             </motion.div>
 
             <motion.h1
