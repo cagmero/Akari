@@ -16,4 +16,17 @@ pub struct PoolVault {
 
 impl PoolVault {
     pub const INIT_SPACE: usize = 8 + 32 + 32 + 8 + 8 + 8 + 8 + 2 + 1 + 1 + 1;
+
+    pub fn maybe_migrate(&mut self) -> Result<()> {
+        match self.version {
+            0 => {
+                // Zero-initialize fields added in v1
+                self.paused = false;
+                self.version = 1;
+                Ok(())
+            },
+            1 => Ok(()),
+            _ => err!(crate::errors::AkariError::UnknownAccountVersion),
+        }
+    }
 }

@@ -15,4 +15,18 @@ pub struct EpochState {
 
 impl EpochState {
     pub const INIT_SPACE: usize = 8 + 8 + 8 + 8 + 8 + 2 + 8 + 4 + 1 + 1;
+
+    pub fn maybe_migrate(&mut self) -> Result<()> {
+        match self.version {
+            0 => {
+                // Zero-initialize fields added in v1
+                self.epoch_accumulated_slippage = 0;
+                self.total_swaps_this_epoch = 0;
+                self.version = 1;
+                Ok(())
+            },
+            1 => Ok(()),
+            _ => err!(crate::errors::AkariError::UnknownAccountVersion),
+        }
+    }
 }

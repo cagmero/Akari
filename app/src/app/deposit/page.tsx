@@ -21,6 +21,14 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { buildKaminoDeposit } from "@/app/actions/kamino";
+import { airdropDemoUSDC } from "@/app/actions/airdrop";
+import { useAkari, USDC_MINT } from "@/hooks/useAkari";
+import {
+  getAssociatedTokenAddressSync,
+  TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 25 },
@@ -44,25 +52,72 @@ const poolInfo = [
 export default function DepositPage() {
   const [amount, setAmount] = useState("");
   const [isDeploying, setIsDeploying] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const { program, wallet } = useAkari();
+
+  const handleMintDemoUSDC = async () => {
+    if (!wallet) return alert("Connect wallet first!");
+    setIsMinting(true);
+    try {
+      const res = await airdropDemoUSDC(wallet.publicKey.toBase58());
+      if (res.success) alert("Minted 1,000 Demo USDC! Tx: " + res.signature);
+      else alert("Error minting: " + res.error);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsMinting(false);
+    }
+  };
 
   const handleDeploy = async () => {
-    if (!amount || isNaN(Number(amount))) return;
+    if (!amount || isNaN(Number(amount)) || !program || !wallet) {
+      return alert("Connect wallet and enter valid amount!");
+    }
     setIsDeploying(true);
 
     try {
-      const result = await buildKaminoDeposit(amount);
+      // 1. Build Klend instructions via Jup/Kamino Action
+      const { accounts: remainingAccounts, dataLength } = await buildKaminoDeposit(amount);
 
-      console.log("Kamino Instruction built via Server Action:");
-      console.log("Instruction Data Length:", result.dataLength);
-      console.log("Remaining Accounts:", result.accounts);
-
-      alert(
-        "Success! Kamino Deposit Instruction built entirely dynamically. Ready to be sent to Akari CPI."
+      // 2. Prepare PDAs and ATAs
+      const [poolVaultPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("pool_vault")],
+        program.programId
       );
+      
+      const userUsdcAta = getAssociatedTokenAddressSync(
+        USDC_MINT,
+        wallet.publicKey,
+        false,
+        TOKEN_2022_PROGRAM_ID
+      );
+      
+      const vaultUsdcAta = getAssociatedTokenAddressSync(
+        USDC_MINT,
+        poolVaultPda,
+        true,
+        TOKEN_2022_PROGRAM_ID
+      );
+
+      // 3. Fire Akari CPI transaction
+      const txSignature = await program.methods
+        .deposit(new BN(Number(amount) * 1_000_000), Buffer.alloc(dataLength)) // Assuming buffer matching the constructed instructions (simplified here to demo call routing)
+        .accounts({
+          depositor: wallet.publicKey,
+          depositorToken: userUsdcAta,
+          vaultToken: vaultUsdcAta,
+          mint: USDC_MINT,
+          poolVault: poolVaultPda,
+          tokenProgram: TOKEN_2022_PROGRAM_ID,
+        })
+        .remainingAccounts(remainingAccounts)
+        .rpc();
+
+      alert("Success! Kamino Deposit Routed via Akari. CPI signature: " + txSignature);
       setAmount("");
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Error building Kamino transaction. See console.");
+      alert(`Error building Kamino transaction: ${e.message}`);
     } finally {
       setIsDeploying(false);
     }
@@ -139,11 +194,13 @@ export default function DepositPage() {
 
               {/* Input */}
               <div className="flex flex-col gap-5 relative z-10">
-                <div className="flex items-center justify-between px-2">
-                  <label className="text-[11px] font-black text-[#3b4044]/40 uppercase tracking-[0.15em]">
+                <div className="flex flex-col md:flex-row items-center justify-between px-2">
+                  <label className="text-[11px] font-black text-[#3b4044]/40 uppercase tracking-[0.15em] mb-2 md:mb-0">
                     Amount (USDC)
                   </label>
-                  <span className="text-[10px] font-bold text-[#3b4044]/30">Available: 1,240,500.00</span>
+                  <button onClick={handleMintDemoUSDC} disabled={isMinting} className="text-[10px] font-bold text-[#d95000] hover:text-[#d95000]/80">
+                    {isMinting ? "Minting..." : "Click to Mint Demo USDC to Wallet \u2192"}
+                  </button>
                 </div>
                 <div className="relative">
                   <GlassInput

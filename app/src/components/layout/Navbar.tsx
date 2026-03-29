@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { cn } from "@/components/ui/Glass";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 const links = [
   { name: "Yield", href: "/deposit" },
@@ -77,13 +78,7 @@ export function Navbar() {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-6">
-            <Link
-              href="/deposit"
-              className="hidden md:inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl text-[13px] font-black uppercase tracking-widest bg-[#3b4044] text-white shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300"
-            >
-              Launch App
-              <ArrowUpRight className="w-4 h-4 opacity-50" />
-            </Link>
+            <WalletMultiButton className="!bg-[#3b4044] !text-white !rounded-2xl !px-6 !py-3.5 !text-[13px] !font-black !uppercase !tracking-widest !shadow-xl hover:!shadow-2xl hover:!-translate-y-0.5 !transition-all !duration-300" />
 
             {/* Mobile menu button */}
             <button

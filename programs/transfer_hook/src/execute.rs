@@ -33,7 +33,7 @@ pub struct Execute<'info> {
     pub kyc_merkle_root: Account<'info, KycMerkleRoot>,
 }
 
-pub fn handle(ctx: Context<Execute>, amount: u64, proof: Vec<[u8; 32]>) -> Result<()> {
+pub fn handle(ctx: Context<Execute>, _amount: u64, proof: Vec<[u8; 32]>) -> Result<()> {
     // 1. Enforce strict 8-wallet limit (max 3-level tree)
     require!(proof.len() <= 3, TransferHookError::TreeDepthExceeded);
     

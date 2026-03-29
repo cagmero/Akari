@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { sha256 } from '@noble/hashes/sha256';
+import crypto from 'crypto';
 import { PublicKey } from '@solana/web3.js';
 
 function sortAndHash(left: Uint8Array, right: Uint8Array): Uint8Array {
@@ -11,7 +11,7 @@ function sortAndHash(left: Uint8Array, right: Uint8Array): Uint8Array {
         combined.set(right, 0);
         combined.set(left, 32);
     }
-    return sha256(combined);
+    return crypto.createHash('sha256').update(combined).digest();
 }
 
 function buildTree(leaves: Uint8Array[]): any {
@@ -58,7 +58,7 @@ async function main() {
 
     const leaves = wallets.map(address => {
         const pubkey = new PublicKey(address);
-        return sha256(pubkey.toBytes());
+        return crypto.createHash('sha256').update(pubkey.toBytes()).digest();
     });
 
     const result = buildTree(leaves);

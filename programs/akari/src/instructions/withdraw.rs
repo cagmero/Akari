@@ -26,7 +26,10 @@ pub struct Withdraw<'info> {
     pub token_program: Interface<'info, TokenInterface>,
 }
 
-pub fn handle(ctx: Context<Withdraw>, amount: u64, currency: u8) -> Result<()> {
+pub fn handle<'info>(ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>, amount: u64, currency: u8) -> Result<()> {
+    ctx.accounts.pool_vault.maybe_migrate()?;
+    ctx.accounts.subsidiary_account.maybe_migrate()?;
+
     require!(!ctx.accounts.pool_vault.paused, AkariError::PoolPaused);
     require!(!ctx.accounts.subsidiary_account.flagged, AkariError::FlaggedWallet);
     
@@ -71,8 +74,8 @@ pub fn handle(ctx: Context<Withdraw>, amount: u64, currency: u8) -> Result<()> {
     };
     
     let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer)
-        .with_remaining_accounts(ctx.remaining_accounts.to_vec());
+    let mut cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+    cpi_ctx.remaining_accounts = ctx.remaining_accounts.to_vec();
     transfer_checked(cpi_ctx, amount, ctx.accounts.mint.decimals)?;
 
     emit!(TransferEvent {

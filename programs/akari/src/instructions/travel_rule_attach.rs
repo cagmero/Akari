@@ -4,6 +4,7 @@ use crate::errors::*;
 use crate::events::*;
 
 #[derive(Accounts)]
+#[instruction(tx_id: [u8; 32])]
 pub struct TravelRuleAttach<'info> {
     #[account(
         init_if_needed,
@@ -25,8 +26,8 @@ pub struct TravelRuleAttach<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handle(
-    ctx: Context<TravelRuleAttach>,
+pub fn handle<'info>(
+    ctx: Context<'_, '_, '_, 'info, TravelRuleAttach<'info>>,
     tx_id: [u8; 32],
     sender_vasp_id: [u8; 16],
     receiver_vasp_id: [u8; 16],

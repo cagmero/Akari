@@ -6,8 +6,8 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-akari = "82NUzodyAhrWgpjCZ1LxfRCsD425i3KeqgeN6xbCQeux"
-transfer_hook = "8CcUWBS5X6PmUNzzwRykCUoPeFTfcsdULo5EVRpuLH2d"
+akari = "BbakYETxcQ98AJmmtFKHx6H8ytXHhUMsZAZdmch99Rrn"
+transfer_hook = "3wiyy4Gxcgnpg1Gj7jMLhG4HRTtZmwpNveoLM6LQJUYz"
 
 [registry]
 url = "https://api.apr.dev"

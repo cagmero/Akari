@@ -1,0 +1,1727 @@
+{
+  "address": "BbakYETxcQ98AJmmtFKHx6H8ytXHhUMsZAZdmch99Rrn",
+  "metadata": {
+    "name": "akari",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "acquire_relay_lock",
+      "discriminator": [
+        89,
+        139,
+        249,
+        172,
+        26,
+        233,
+        173,
+        142
+      ],
+      "accounts": [
+        {
+          "name": "oracle_relay_lock",
+          "writable": true
+        },
+        {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "deploy_yield",
+      "discriminator": [
+        127,
+        139,
+        43,
+        64,
+        236,
+        8,
+        249,
+        240
+      ],
+      "accounts": [
+        {
+          "name": "yield_position",
+          "writable": true
+        },
+        {
+          "name": "pool_vault",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "currency",
+          "type": "u8"
+        },
+        {
+          "name": "venue",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "ix_data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "subsidiary_account",
+          "writable": true
+        },
+        {
+          "name": "pool_vault",
+          "writable": true
+        },
+        {
+          "name": "subsidiary_ata",
+          "writable": true
+        },
+        {
+          "name": "pool_ata",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "currency",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "flag_wallet",
+      "discriminator": [
+        234,
+        219,
+        233,
+        152,
+        83,
+        29,
+        198,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "subsidiary_account",
+          "writable": true
+        },
+        {
+          "name": "pool_vault"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "flagged",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "fx_swap",
+      "discriminator": [
+        254,
+        10,
+        190,
+        91,
+        163,
+        168,
+        123,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subsidiary_account",
+          "writable": true
+        },
+        {
+          "name": "pool_vault",
+          "writable": true
+        },
+        {
+          "name": "epoch_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  112,
+                  111,
+                  99,
+                  104,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "currency_pair"
+              }
+            ]
+          }
+        },
+        {
+          "name": "six_price_feed"
+        }
+      ],
+      "args": [
+        {
+          "name": "from_currency",
+          "type": "u8"
+        },
+        {
+          "name": "to_currency",
+          "type": "u8"
+        },
+        {
+          "name": "in_amount",
+          "type": "u64"
+        },
+        {
+          "name": "currency_pair",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        },
+        {
+          "name": "ix_data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "harvest_yield",
+      "discriminator": [
+        28,
+        200,
+        150,
+        200,
+        69,
+        56,
+        38,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "yield_position",
+          "writable": true
+        },
+        {
+          "name": "pool_vault",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "ix_data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "initialize_epoch_state",
+      "discriminator": [
+        139,
+        122,
+        53,
+        254,
+        85,
+        205,
+        138,
+        245
+      ],
+      "accounts": [
+        {
+          "name": "epoch_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  112,
+                  111,
+                  99,
+                  104,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "currency_pair"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_vault"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "currency_pair",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        },
+        {
+          "name": "epoch_duration",
+          "type": "i64"
+        },
+        {
+          "name": "max_epoch_slippage_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "initialize_oracle_relay_lock",
+      "discriminator": [
+        230,
+        104,
+        247,
+        74,
+        43,
+        35,
+        139,
+        3
+      ],
+      "accounts": [
+        {
+          "name": "oracle_relay_lock",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  97,
+                  99,
+                  108,
+                  101,
+                  95,
+                  114,
+                  101,
+                  108,
+                  97,
+                  121,
+                  95,
+                  108,
+                  111,
+                  99,
+                  107
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_pool",
+      "discriminator": [
+        95,
+        180,
+        10,
+        172,
+        84,
+        174,
+        232,
+        40
+      ],
+      "accounts": [
+        {
+          "name": "pool_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "oracle_authority",
+          "type": "pubkey"
+        },
+        {
+          "name": "travel_rule_threshold",
+          "type": "u64"
+        },
+        {
+          "name": "daily_limit_usdc",
+          "type": "u64"
+        },
+        {
+          "name": "max_slippage_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "pause_pool",
+      "discriminator": [
+        160,
+        15,
+        12,
+        189,
+        160,
+        0,
+        243,
+        245
+      ],
+      "accounts": [
+        {
+          "name": "pool_vault",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "register_subsidiary",
+      "discriminator": [
+        34,
+        128,
+        241,
+        166,
+        178,
+        141,
+        29,
+        74
+      ],
+      "accounts": [
+        {
+          "name": "subsidiary_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  105,
+                  100,
+                  105,
+                  97,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_vault"
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "kyc_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "source_of_funds_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "vasp_id",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "renew_relay_lock",
+      "discriminator": [
+        138,
+        24,
+        120,
+        197,
+        172,
+        119,
+        245,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "oracle_relay_lock",
+          "writable": true
+        },
+        {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "travel_rule_attach",
+      "discriminator": [
+        63,
+        243,
+        111,
+        81,
+        125,
+        122,
+        8,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "travel_rule_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  97,
+                  118,
+                  101,
+                  108,
+                  95,
+                  114,
+                  117,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "tx_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subsidiary_account",
+          "writable": true
+        },
+        {
+          "name": "pool_vault"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tx_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "sender_vasp_id",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "receiver_vasp_id",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "beneficiary_name_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "currency",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "update_fx_rate",
+      "discriminator": [
+        81,
+        49,
+        150,
+        190,
+        196,
+        12,
+        28,
+        207
+      ],
+      "accounts": [
+        {
+          "name": "pool_vault"
+        },
+        {
+          "name": "six_price_feed",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  105,
+                  120,
+                  95,
+                  112,
+                  114,
+                  105,
+                  99,
+                  101,
+                  95,
+                  102,
+                  101,
+                  101,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "currency_pair"
+              }
+            ]
+          }
+        },
+        {
+          "name": "oracle_relay_lock"
+        },
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "currency_pair",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        },
+        {
+          "name": "bid",
+          "type": "i64"
+        },
+        {
+          "name": "ask",
+          "type": "i64"
+        },
+        {
+          "name": "published_at",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "discriminator": [
+        183,
+        18,
+        70,
+        156,
+        148,
+        109,
+        161,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "subsidiary_account",
+          "writable": true
+        },
+        {
+          "name": "pool_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "subsidiary_ata",
+          "writable": true
+        },
+        {
+          "name": "pool_ata",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "currency",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EpochState",
+      "discriminator": [
+        191,
+        63,
+        139,
+        237,
+        144,
+        12,
+        223,
+        210
+      ]
+    },
+    {
+      "name": "OracleRelayLock",
+      "discriminator": [
+        211,
+        155,
+        191,
+        1,
+        116,
+        24,
+        91,
+        215
+      ]
+    },
+    {
+      "name": "PoolVault",
+      "discriminator": [
+        9,
+        184,
+        204,
+        69,
+        231,
+        82,
+        252,
+        154
+      ]
+    },
+    {
+      "name": "SixPriceFeed",
+      "discriminator": [
+        115,
+        183,
+        227,
+        38,
+        239,
+        206,
+        107,
+        207
+      ]
+    },
+    {
+      "name": "SubsidiaryAccount",
+      "discriminator": [
+        15,
+        32,
+        152,
+        35,
+        33,
+        185,
+        211,
+        226
+      ]
+    },
+    {
+      "name": "TravelRuleRecord",
+      "discriminator": [
+        2,
+        179,
+        102,
+        25,
+        10,
+        202,
+        48,
+        152
+      ]
+    },
+    {
+      "name": "YieldPosition",
+      "discriminator": [
+        77,
+        217,
+        160,
+        86,
+        158,
+        186,
+        248,
+        193
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "FxSwapEvent",
+      "discriminator": [
+        11,
+        16,
+        187,
+        220,
+        83,
+        87,
+        156,
+        222
+      ]
+    },
+    {
+      "name": "OracleUpdateEvent",
+      "discriminator": [
+        73,
+        90,
+        83,
+        201,
+        125,
+        98,
+        17,
+        252
+      ]
+    },
+    {
+      "name": "RelayLockEvent",
+      "discriminator": [
+        61,
+        132,
+        8,
+        134,
+        239,
+        32,
+        4,
+        169
+      ]
+    },
+    {
+      "name": "TransferEvent",
+      "discriminator": [
+        100,
+        10,
+        46,
+        113,
+        8,
+        28,
+        179,
+        125
+      ]
+    },
+    {
+      "name": "TravelRuleEvent",
+      "discriminator": [
+        114,
+        24,
+        203,
+        207,
+        181,
+        13,
+        215,
+        220
+      ]
+    },
+    {
+      "name": "YieldDeployedEvent",
+      "discriminator": [
+        56,
+        21,
+        144,
+        240,
+        85,
+        245,
+        201,
+        45
+      ]
+    },
+    {
+      "name": "YieldHarvestedEvent",
+      "discriminator": [
+        12,
+        181,
+        189,
+        61,
+        84,
+        171,
+        252,
+        79
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnknownAccountVersion",
+      "msg": "Account version is unknown or unsupported."
+    },
+    {
+      "code": 6001,
+      "name": "InvalidOracleAuthority",
+      "msg": "Signer is not the authorized oracle authority."
+    },
+    {
+      "code": 6002,
+      "name": "RelayLockNotHeld",
+      "msg": "Oracle relay lock is required but not held."
+    },
+    {
+      "code": 6003,
+      "name": "RelayLockHeldByAnother",
+      "msg": "Oracle relay lock is currently held by another relay."
+    },
+    {
+      "code": 6004,
+      "name": "EpochSlippageBudgetExhausted",
+      "msg": "Epoch slippage budget exceeded."
+    },
+    {
+      "code": 6005,
+      "name": "SlippageExceeded",
+      "msg": "Per-swap slippage limit exceeded."
+    },
+    {
+      "code": 6006,
+      "name": "InsufficientLiquidity",
+      "msg": "Internal liquidity insufficient for swap."
+    },
+    {
+      "code": 6007,
+      "name": "InsufficientIdleBalance",
+      "msg": "Insufficient idle balance to deploy yield."
+    },
+    {
+      "code": 6008,
+      "name": "OracleStale",
+      "msg": "Oracle prices are stale."
+    },
+    {
+      "code": 6009,
+      "name": "FlaggedWallet",
+      "msg": "Subsidiary wallet is flagged for AML."
+    },
+    {
+      "code": 6010,
+      "name": "DailyLimitExceeded",
+      "msg": "Daily transfer limit exceeded."
+    },
+    {
+      "code": 6011,
+      "name": "PoolPaused",
+      "msg": "Pool is currently paused."
+    },
+    {
+      "code": 6012,
+      "name": "TravelRuleRequired",
+      "msg": "Travel rule data is required for this transfer amount."
+    },
+    {
+      "code": 6013,
+      "name": "Unauthorized",
+      "msg": "Unauthorized access."
+    }
+  ],
+  "types": [
+    {
+      "name": "EpochState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency_pair",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "epoch_start",
+            "type": "i64"
+          },
+          {
+            "name": "epoch_duration",
+            "type": "i64"
+          },
+          {
+            "name": "epoch_accumulated_slippage",
+            "type": "u64"
+          },
+          {
+            "name": "max_epoch_slippage_bps",
+            "type": "u16"
+          },
+          {
+            "name": "vault_nav_snapshot_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "total_swaps_this_epoch",
+            "type": "u32"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FxSwapEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subsidiary",
+            "type": "pubkey"
+          },
+          {
+            "name": "from_currency",
+            "type": "u8"
+          },
+          {
+            "name": "to_currency",
+            "type": "u8"
+          },
+          {
+            "name": "in_amount",
+            "type": "u64"
+          },
+          {
+            "name": "expected_out_amount",
+            "type": "u64"
+          },
+          {
+            "name": "actual_out_amount",
+            "type": "u64"
+          },
+          {
+            "name": "spread_bps",
+            "type": "u16"
+          },
+          {
+            "name": "oracle_source",
+            "type": "u8"
+          },
+          {
+            "name": "liquidity_source",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OracleRelayLock",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "acquired_at",
+            "type": "i64"
+          },
+          {
+            "name": "ttl",
+            "type": "i64"
+          },
+          {
+            "name": "renewal_count",
+            "type": "u64"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OracleUpdateEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency_pair",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "bid",
+            "type": "i64"
+          },
+          {
+            "name": "ask",
+            "type": "i64"
+          },
+          {
+            "name": "mid",
+            "type": "i64"
+          },
+          {
+            "name": "spread_bps",
+            "type": "u16"
+          },
+          {
+            "name": "oracle_source",
+            "type": "u8"
+          },
+          {
+            "name": "published_at",
+            "type": "i64"
+          },
+          {
+            "name": "submitted_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "travel_rule_threshold",
+            "type": "u64"
+          },
+          {
+            "name": "daily_limit_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "total_usdc",
+            "type": "u64"
+          },
+          {
+            "name": "total_eurc",
+            "type": "u64"
+          },
+          {
+            "name": "max_slippage_bps",
+            "type": "u16"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RelayLockEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "action",
+            "type": "u8"
+          },
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SixPriceFeed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency_pair",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "bid",
+            "type": "i64"
+          },
+          {
+            "name": "ask",
+            "type": "i64"
+          },
+          {
+            "name": "mid",
+            "type": "i64"
+          },
+          {
+            "name": "spread_bps",
+            "type": "u16"
+          },
+          {
+            "name": "published_at",
+            "type": "i64"
+          },
+          {
+            "name": "submitted_at",
+            "type": "i64"
+          },
+          {
+            "name": "oracle_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SubsidiaryAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "kyc_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "source_of_funds_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "vasp_id",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "usdc_balance",
+            "type": "u64"
+          },
+          {
+            "name": "eurc_balance",
+            "type": "u64"
+          },
+          {
+            "name": "daily_transfer_total",
+            "type": "u64"
+          },
+          {
+            "name": "last_transfer_day",
+            "type": "i64"
+          },
+          {
+            "name": "flagged",
+            "type": "bool"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TravelRuleEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "record_pda",
+            "type": "pubkey"
+          },
+          {
+            "name": "sender",
+            "type": "pubkey"
+          },
+          {
+            "name": "receiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TravelRuleRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "sender_vasp_id",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "receiver_vasp_id",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "beneficiary_name_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currency",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldDeployedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency",
+            "type": "u8"
+          },
+          {
+            "name": "venue",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldHarvestedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency",
+            "type": "u8"
+          },
+          {
+            "name": "venue",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "yield_amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currency",
+            "type": "u8"
+          },
+          {
+            "name": "venue",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "deposited_amount",
+            "type": "u64"
+          },
+          {
+            "name": "shares_held",
+            "type": "u64"
+          },
+          {
+            "name": "last_harvest_at",
+            "type": "i64"
+          },
+          {
+            "name": "total_yield_harvested",
+            "type": "u64"
+          },
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

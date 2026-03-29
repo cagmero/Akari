@@ -1,0 +1,41 @@
+{
+  "root": "78909e68151e62fae164442fe6f4a9554723ba3541a59ce9eadf10027b144832",
+  "leafCount": 3,
+  "tree": [
+    [
+      {
+        "hash": "c2a72b540aabc525ba5b560d14e232868d0bd1281215993b10b5a76c3a77e5fc"
+      },
+      {
+        "hash": "08f7b7c80836f4709181badcc0444e4f2258b4ae3993a148e987e413e4ca932b"
+      },
+      {
+        "hash": "bdd0a8a3c430c3ef8de8876790687162bd405cba6fed3b803145b57f21c96c2f"
+      }
+    ],
+    [
+      {
+        "hash": "633a479bc2bbf3f77db3fb012217bd38bf4e4899641b5c3278d5b4b144b77760",
+        "left": "c2a72b540aabc525ba5b560d14e232868d0bd1281215993b10b5a76c3a77e5fc",
+        "right": "08f7b7c80836f4709181badcc0444e4f2258b4ae3993a148e987e413e4ca932b"
+      },
+      {
+        "hash": "e3e061a9e8447b422b404b80d3609472d6d5c2914432940c4da414a1f0346140",
+        "left": "bdd0a8a3c430c3ef8de8876790687162bd405cba6fed3b803145b57f21c96c2f",
+        "right": "bdd0a8a3c430c3ef8de8876790687162bd405cba6fed3b803145b57f21c96c2f"
+      }
+    ],
+    [
+      {
+        "hash": "78909e68151e62fae164442fe6f4a9554723ba3541a59ce9eadf10027b144832",
+        "left": "633a479bc2bbf3f77db3fb012217bd38bf4e4899641b5c3278d5b4b144b77760",
+        "right": "e3e061a9e8447b422b404b80d3609472d6d5c2914432940c4da414a1f0346140"
+      }
+    ]
+  ],
+  "wallets": [
+    "FHJYAxesexMA6sMg7vb9DfgDg358NqGz6NsM1nQbMJtS",
+    "8wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7f",
+    "4wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7x"
+  ]
+}

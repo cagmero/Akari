@@ -25,8 +25,8 @@ pub struct UpdateFxRate<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handle(
-    ctx: Context<UpdateFxRate>,
+pub fn handle<'info>(
+    ctx: Context<'_, '_, '_, 'info, UpdateFxRate<'info>>,
     currency_pair: [u8; 8],
     bid: i64,
     ask: i64,

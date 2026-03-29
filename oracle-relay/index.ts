@@ -1,62 +1,79 @@
-import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import * as anchor from '@coral-xyz/anchor';
+import { Connection, Keypair } from '@solana/web3.js';
 import fs from 'fs';
+import { SixClient } from './six-client';
+import { acquireOrRenewLock } from './leader-election';
+import { submitPriceOnChain } from './submitter';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// Stub for SIX API fetching. In production this uses mutual TLS.
-async function fetchSixRates() {
-    return {
-        bid: 1080000, // $1.08
-        ask: 1085000, 
-        publishedAt: Math.floor(Date.now() / 1000)
-    };
-}
+const ORACLE_KEY_PATH = process.env.ORACLE_KEY_PATH || '../oracle-keypair.json';
+const IDL_PATH = '../app/src/idl/akari.json';
+const PAIRS = [
+    { code: '946681_149', pdaSeed: 'EUR_USDP' },
+    { code: '275164_149', pdaSeed: 'CHF_USDP' }
+];
 
 async function main() {
-    console.log("Starting Akari Oracle Relay...");
+    console.log("Starting Primary Oracle Relay Service (SIX \u2192 Solana)...");
     
-    // In production, we'd load the Keypair from a secure HSM or env vars
-    // const keypairPath = process.env.ORACLE_KEYPAIR_PATH;
-    // const oracleKeypair = Keypair.fromSecretKey(new Uint8Array(JSON.parse(fs.readFileSync(keypairPath, 'utf8'))));
+    if (!fs.existsSync(ORACLE_KEY_PATH)) {
+        throw new Error(`Oracle keypair not found at ${ORACLE_KEY_PATH}`);
+    }
     
-    // const connection = new Connection("https://api.devnet.solana.com", 'confirmed');
-    // const provider = new anchor.AnchorProvider(connection, new anchor.Wallet(oracleKeypair), {});
-    // anchor.setProvider(provider);
+    const secretKeyString = fs.readFileSync(ORACLE_KEY_PATH, { encoding: 'utf8' });
+    const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+    const wallet = new anchor.Wallet(Keypair.fromSecretKey(secretKey));
+
+    const connection = new Connection(process.env.RPC_URL || 'https://api.devnet.solana.com', 'confirmed');
+    const provider = new anchor.AnchorProvider(connection, wallet, { commitment: 'confirmed' });
+    anchor.setProvider(provider);
+
+    if (!fs.existsSync(IDL_PATH)) {
+        throw new Error(`IDL not found at ${IDL_PATH}`);
+    }
     
-    // const programId = new PublicKey("...Akari Program ID...");
-    // const program = new anchor.Program(idl, programId, provider);
-    
-    // Standby mode coordination:
-    // 1. Try to acquire/renew OracleRelayLock PDA
-    // 2. If acquired: Fetch rates from SIX
-    // 3. Post rates on-chain using `update_fx_rate` instruction
-    
-    console.log("Polling SIX API every 60 seconds...");
-    setInterval(async () => {
+    const idl = JSON.parse(fs.readFileSync(IDL_PATH, 'utf8'));
+    const program = new anchor.Program(idl, provider);
+    const sixClient = new SixClient();
+
+    let isRunning = true;
+    process.on('SIGINT', () => {
+        console.log("Shutting down Primary Oracle gracefully...");
+        isRunning = false;
+    });
+
+    while (isRunning) {
         try {
-            console.log("Fetching new rates from SIX API...");
-            const rates = await fetchSixRates();
-            console.log(`[SIX] Bid: ${rates.bid}, Ask: ${rates.ask}, Timestamp: ${rates.publishedAt}`);
-            
-            // Acquire lock logic...
-            console.log("Acquiring/Renewing Oracle Relay Lock...");
-            // await program.methods.renewRelayLock().accounts({...}).rpc();
-            
-            // Post rates...
-            console.log("Submitting tx `update_fx_rate`...");
-            // await program.methods.updateFxRate(
-            //     Array.from(Buffer.from("EUR_USDP")),
-            //     new anchor.BN(rates.bid),
-            //     new anchor.BN(rates.ask),
-            //     new anchor.BN(rates.publishedAt)
-            // ).accounts({...}).rpc();
-            
-            console.log("Rates updated on-chain successfully.");
-        } catch (error) {
-            console.error("Relay error:", error);
-            // If lock is held by another relay: "LockheldByAnother"
-            // Enter standby sleep mode
+            const hasLock = await acquireOrRenewLock(program, wallet);
+            if (!hasLock) {
+                console.log("[Relay] Entering standby mode. Lock held by another instance. Waiting for next cycle...");
+            } else {
+                for (const pair of PAIRS) {
+                    const price = await sixClient.fetchFxRates(pair.code);
+                    await submitPriceOnChain(
+                        program,
+                        wallet,
+                        pair.pdaSeed,
+                        price.bid,
+                        price.ask,
+                        price.mid,
+                        price.spread_bps,
+                        price.timestamp
+                    );
+                }
+                const gold = await sixClient.fetchGoldPrice();
+                console.log(`[Relay] Fetched Gold Price: $${gold.price}`);
+            }
+        } catch (e: any) {
+             console.error(`[Relay] Loop Error:`, e.message);
         }
-    }, 60000);
+
+        if (isRunning) {
+            console.log("Sleeping 30s before next oracle tick...");
+            await new Promise(r => setTimeout(r, 30000));
+        }
+    }
 }
 
 main().catch(console.error);

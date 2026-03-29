@@ -7,7 +7,7 @@ pub mod events;
 
 use instructions::*;
 
-declare_id!("82NUzodyAhrWgpjCZ1LxfRCsD425i3KeqgeN6xbCQeux");
+declare_id!("BbakYETxcQ98AJmmtFKHx6H8ytXHhUMsZAZdmch99Rrn");
 
 #[program]
 pub mod akari {
@@ -51,16 +51,16 @@ pub mod akari {
         instructions::register_subsidiary::handle(ctx, kyc_hash, source_of_funds_hash, vasp_id)
     }
 
-    pub fn deposit(ctx: Context<Deposit>, amount: u64, currency: u8) -> Result<()> {
+    pub fn deposit<'info>(ctx: Context<'_, '_, '_, 'info, Deposit<'info>>, amount: u64, currency: u8) -> Result<()> {
         instructions::deposit::handle(ctx, amount, currency)
     }
 
-    pub fn withdraw(ctx: Context<Withdraw>, amount: u64, currency: u8) -> Result<()> {
+    pub fn withdraw<'info>(ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>, amount: u64, currency: u8) -> Result<()> {
         instructions::withdraw::handle(ctx, amount, currency)
     }
 
-    pub fn update_fx_rate(
-        ctx: Context<UpdateFxRate>,
+    pub fn update_fx_rate<'info>(
+        ctx: Context<'_, '_, '_, 'info, UpdateFxRate<'info>>,
         currency_pair: [u8; 8],
         bid: i64,
         ask: i64,
@@ -74,9 +74,10 @@ pub mod akari {
         from_currency: u8,
         to_currency: u8,
         in_amount: u64,
+        currency_pair: [u8; 8],
         ix_data: Vec<u8>,
     ) -> Result<()> {
-        instructions::fx_swap::handle(ctx, from_currency, to_currency, in_amount, ix_data)
+        instructions::fx_swap::handle(ctx, from_currency, to_currency, in_amount, currency_pair, ix_data)
     }
 
     pub fn acquire_relay_lock(ctx: Context<AcquireRelayLock>) -> Result<()> {
@@ -104,8 +105,8 @@ pub mod akari {
         instructions::harvest_yield::handle(ctx, ix_data)
     }
 
-    pub fn travel_rule_attach(
-        ctx: Context<TravelRuleAttach>,
+    pub fn travel_rule_attach<'info>(
+        ctx: Context<'_, '_, '_, 'info, TravelRuleAttach<'info>>,
         tx_id: [u8; 32],
         sender_vasp_id: [u8; 16],
         receiver_vasp_id: [u8; 16],

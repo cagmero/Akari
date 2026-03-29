@@ -35,7 +35,7 @@ pub fn handle<'info>(
             });
         }
         
-        let ix = solana_program::instruction::Instruction {
+        let ix = anchor_lang::solana_program::instruction::Instruction {
             program_id: kamino_program.key(),
             accounts: account_metas,
             data: ix_data,
@@ -48,7 +48,7 @@ pub fn handle<'info>(
         ];
         let signer = &[&seeds[..]];
 
-        solana_program::program::invoke_signed(
+        anchor_lang::solana_program::program::invoke_signed(
             &ix,
             ctx.remaining_accounts,
             signer,
