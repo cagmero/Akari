@@ -143,16 +143,16 @@
 - [x] Allows acquisition if: lock expired (now - acquired_at >= ttl) OR caller already holds it
 - [x] Sets holder = caller, acquired_at = now, increments renewal_count
 - [x] Emits `RelayLockEvent` (action = 0 = acquired)
-- [ ] Test: first acquisition succeeds
-- [ ] Test: second relay cannot acquire while first holds valid lock
-- [ ] Test: second relay acquires after TTL expires
+- [x] Test: first acquisition succeeds
+- [x] Test: second relay cannot acquire while first holds valid lock
+- [x] Test: second relay acquires after TTL expires
 
 ### `renew_relay_lock`
 - [x] Only current holder can renew
 - [x] Resets acquired_at = now (extends TTL)
 - [x] Emits `RelayLockEvent` (action = 1 = renewed)
-- [ ] Test: holder can renew
-- [ ] Test: non-holder cannot renew
+- [x] Test: holder can renew
+- [x] Test: non-holder cannot renew
 
 ---
 
@@ -164,10 +164,10 @@
 - [x] Creates or updates `SixPriceFeed` PDA (seed: `["six_price_feed", currency_pair]`)
 - [x] Stores bid, ask, mid = (bid+ask)/2, spread_bps, published_at, submitted_at
 - [x] Emits `OracleUpdateEvent` with bid/ask/mid/spread
-- [ ] Test: non-oracle-authority rejected
-- [ ] Test: caller without lock rejected
-- [ ] Test: bid/ask stored correctly, mid computed correctly
-- [ ] Test: spread_bps computed correctly
+- [x] Test: non-oracle-authority rejected
+- [x] Test: caller without lock rejected
+- [x] Test: bid/ask stored correctly, mid computed correctly
+- [x] Test: spread_bps computed correctly
 
 ### `fx_swap` — Full Implementation
 - [x] Load `EpochState` PDA for the relevant currency pair
@@ -175,8 +175,8 @@
 - [x] Epoch reset: if expired, reset accumulated_slippage, snapshot vault_nav
 - [x] Load `SixPriceFeed` PDA
   - [x] Fresh (< 90s): use directional price — ASK for buying base, BID for selling base; oracle_source = 0
-  - [ ] Stale: load Pyth from remaining_accounts, validate freshness + confidence; oracle_source = 1
-  - [ ] Both stale: `OracleStale`
+  - [x] Stale: load Pyth from remaining_accounts, validate freshness + confidence; oracle_source = 1
+  - [x] Both stale: `OracleStale`
 - [x] Calculate expected output using u128 intermediate (prevent overflow)
 - [x] Per-swap slippage check: `received >= expected * (10_000 - bps) / 10_000` → `SlippageExceeded`
 - [x] Epoch budget check against `EpochState` → `EpochSlippageBudgetExhausted`
@@ -186,16 +186,16 @@
 - [x] Update `EpochState.epoch_accumulated_slippage`, `total_swaps_this_epoch`
 - [x] Debit / credit subsidiary notional balances
 - [x] Emit `FxSwapEvent` with oracle_source, spread_bps, liquidity_source, epoch_slippage_remaining
-- [ ] Test: SIX fresh — uses ASK for USDC→EURC, BID for EURC→USDC
-- [ ] Test: SIX stale, Pyth fresh — uses Pyth, oracle_source = 1
-- [ ] Test: both stale — OracleStale
-- [ ] Test: per-swap slippage violated — SlippageExceeded
-- [ ] Test: EUR_USD epoch budget exhausted — EpochSlippageBudgetExhausted
-- [ ] Test: CHF_USD epoch state unaffected by EUR_USD budget exhaustion (sharding)
-- [ ] Test: epoch auto-resets after epoch_duration
-- [ ] Test: internal liquidity sufficient — notional swap, no real tokens
-- [ ] Test: internal liquidity insufficient — Jupiter CPI path invoked
-- [ ] Test: u128 overflow safety with large amounts (near max u64)
+- [x] Test: SIX fresh — uses ASK for USDC→EURC, BID for EURC→USDC
+- [x] Test: SIX stale, Pyth fresh — uses Pyth, oracle_source = 1
+- [x] Test: both stale — OracleStale
+- [x] Test: per-swap slippage violated — SlippageExceeded
+- [x] Test: EUR_USD epoch budget exhausted — EpochSlippageBudgetExhausted
+- [x] Test: CHF_USD epoch state unaffected by EUR_USD budget exhaustion (sharding)
+- [x] Test: epoch auto-resets after epoch_duration
+- [x] Test: internal liquidity sufficient — notional swap, no real tokens
+- [x] Test: internal liquidity insufficient — Jupiter CPI path invoked
+- [x] Test: u128 overflow safety with large amounts (near max u64)
 
 ---
 
@@ -208,8 +208,8 @@
 - [x] Create `YieldPosition` PDA (seed: `["yield_position", currency, venue]`)
 - [x] Real CPI: Use standard Cross-Program Invocation to call Kamino's deposit function using `klend` crate. Version = 1.
 - [x] Emit `YieldDeployedEvent`
-- [ ] Test: admin deploys 10% of USDC to "kamino" — YieldPosition created and CPI succeeds
-- [ ] Test: deploy amount > idle balance — `InsufficientIdleBalance`
+- [x] Test: admin deploys 10% of USDC to "kamino" — YieldPosition created and CPI succeeds
+- [x] Test: deploy amount > idle balance — `InsufficientIdleBalance`
 
 ### `harvest_yield`
 - [x] Authority-only
@@ -217,7 +217,7 @@
 - [x] Add yield to pool_vault.total_usdc / total_eurc
 - [x] Update position: total_yield_harvested, last_harvest_at
 - [x] Emit `YieldHarvestedEvent`
-- [ ] Test: harvest after time passes — pool total increases
+- [x] Test: harvest after time passes — pool total increases
 
 ---
 
@@ -292,50 +292,50 @@
 - [x] `anchor deploy --program-name akari` — record Program ID
 - [x] `anchor idl init` for both programs
 - [x] Copy IDLs to `app/src/idl/`
-- [ ] Start primary oracle relay — confirm SixPriceFeed PDA updating on Explorer
-- [ ] Start standby relay — confirm standby mode logged
-- [ ] Kill primary — confirm standby acquires lock within 60s
+- [x] Start primary oracle relay — confirm SixPriceFeed PDA updating on Explorer
+- [x] Start standby relay — confirm standby mode logged
+- [x] Kill primary — confirm standby acquires lock within 60s
 
 ---
 
 ## Phase 10 — Frontend
 
 ### Foundation
-- [ ] Install all dependencies (see ARCHITECTURE.md)
-- [ ] `lib/anchor.ts` — providers for both programs
-- [ ] `lib/constants.ts` — all PDA derivation helpers from `devnet-addresses.json`
-- [ ] `lib/merkle.ts` — client-side proof generation (reads `tree-output.json` or generates on-the-fly)
-- [ ] `lib/jupiter.ts` — Jupiter quote API client (`@jup-ag/api`) to fetch actual routing accounts
-- [ ] `lib/kamino.ts` — `@kamino-finance/klend-sdk` to fetch market accounts for yield router
-- [ ] `lib/fireblocks.ts` — `FireblocksClient` interface + `MockFireblocksClient`
-- [ ] Wallet connect + KYC gate (check wallet in Merkle tree before allowing dashboard access)
+- [x] Install all dependencies (see ARCHITECTURE.md)
+- [x] `lib/anchor.ts` — providers for both programs
+- [x] `lib/constants.ts` — all PDA derivation helpers from `devnet-addresses.json`
+- [x] `lib/merkle.ts` — client-side proof generation (reads `tree-output.json` or generates on-the-fly)
+- [x] `lib/jupiter.ts` — Jupiter quote API client (`@jup-ag/api`) to fetch actual routing accounts
+- [x] `lib/kamino.ts` — `@kamino-finance/klend-sdk` to fetch market accounts for yield router
+- [x] `lib/fireblocks.ts` — `FireblocksClient` interface + `MockFireblocksClient`
+- [x] Wallet connect + KYC gate (check wallet in Merkle tree before allowing dashboard access)
 
 ### Hooks
-- [ ] `usePool.ts` — fetch PoolVault, auto-refresh
-- [ ] `useSixPrice.ts` — fetch SixPriceFeed PDAs (EUR_USD, CHF_USD) every 10s; expose bid/ask/mid/spread
-- [ ] `useEpochState.ts` — fetch both EpochState PDAs; expose accumulated/budget/remaining/resets_in
-- [ ] `useOracleRelayStatus.ts` — fetch OracleRelayLock; expose holder, is_fresh, time_until_expiry
-- [ ] `useYieldPositions.ts` — fetch all YieldPosition PDAs
-- [ ] `useKycStatus.ts` — check if connected wallet is in Merkle tree
+- [x] `usePool.ts` — fetch PoolVault, auto-refresh
+- [x] `useSixPrice.ts` — fetch SixPriceFeed PDAs (EUR_USD, CHF_USD) every 10s; expose bid/ask/mid/spread
+- [x] `useEpochState.ts` — fetch both EpochState PDAs; expose accumulated/budget/remaining/resets_in
+- [x] `useOracleRelayStatus.ts` — fetch OracleRelayLock; expose holder, is_fresh, time_until_expiry
+- [x] `useYieldPositions.ts` — fetch all YieldPosition PDAs
+- [x] `useKycStatus.ts` — check if connected wallet is in Merkle tree
 
 ### Pages
 - [x] `/` — landing, connect wallet, KYC check
-- [ ] `/dashboard` — pool totals, subsidiary list, SIX ticker strip, recent events
-- [ ] `/dashboard/pool` — subsidiary cards with USDC/EURC balances, deposit/withdraw forms, daily limit bars, Travel Rule modal
-- [ ] `/dashboard/fx` — SixRateTicker (bid/ask/spread/gold), per-pair SlippageGauges, FxSwapPanel (directional pricing label, Jupiter fallback indicator), OracleStatusBadge
-- [ ] `/dashboard/yield` — YieldPositionCard per venue (Marginfi stub, Kamino stub), deploy form, harvest button
-- [ ] `/dashboard/audit` — full event table, Travel Rule accordion rows, Solana Explorer links, filters
-- [ ] `/admin` — KYC root display, register subsidiary form (triggers Merkle rebuild), flag/unflag, pause/unpause, relay lock status
+- [x] `/dashboard` — pool totals, subsidiary list, SIX ticker strip, recent events
+- [x] `/dashboard/pool` — subsidiary cards with USDC/EURC balances, deposit/withdraw forms, daily limit bars, Travel Rule modal
+- [x] `/dashboard/fx` — SixRateTicker (bid/ask/spread/gold), per-pair SlippageGauges, FxSwapPanel (directional pricing label, Jupiter fallback indicator), OracleStatusBadge
+- [x] `/dashboard/yield` — YieldPositionCard per venue (Marginfi stub, Kamino stub), deploy form, harvest button
+- [x] `/dashboard/audit` — full event table, Travel Rule accordion rows, Solana Explorer links, filters
+- [x] `/admin` — KYC root display, register subsidiary form (triggers Merkle rebuild), flag/unflag, pause/unpause, relay lock status
 
 ### Components
-- [ ] `SixRateTicker.tsx` — bid, ask, mid, spread per pair + LBMA Gold row
-- [ ] `SlippageGauge.tsx` — per-pair, color transitions, epoch reset timer
-- [ ] `OracleStatusBadge.tsx` — SIX Live/Pyth Fallback/Stale with relay lock info
-- [ ] `FxSwapPanel.tsx` — directional price label, spread cost, Jupiter indicator
-- [ ] `YieldPositionCard.tsx` — venue, deployed, APY, accrued, harvest button
-- [ ] `TravelRuleModal.tsx` — auto-triggers above threshold
-- [ ] `AuditTable.tsx` — all event types, expandable Travel Rule rows, Explorer links
-- [ ] `FireblocksStatus.tsx` — stub badge + architecture side panel
+- [x] `SixRateTicker.tsx` — bid, ask, mid, spread per pair + LBMA Gold row
+- [x] `SlippageGauge.tsx` — per-pair, color transitions, epoch reset timer
+- [x] `OracleStatusBadge.tsx` — SIX Live/Pyth Fallback/Stale with relay lock info
+- [x] `FxSwapPanel.tsx` — directional price label, spread cost, Jupiter indicator
+- [x] `YieldPositionCard.tsx` — venue, deployed, APY, accrued, harvest button
+- [x] `TravelRuleModal.tsx` — auto-triggers above threshold
+- [x] `AuditTable.tsx` — all event types, expandable Travel Rule rows, Explorer links
+- [x] `FireblocksStatus.tsx` — stub badge + architecture side panel
 
 ---
 

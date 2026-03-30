@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { AppWalletProvider } from "@/components/AppWalletProvider";
+import PrivyProviderWrapper from "@/components/PrivyProviderWrapper";
 
 export const metadata: Metadata = {
   title: "Akari Treasury — Corporate DeFi on Solana",
@@ -27,11 +27,11 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased overflow-x-hidden bg-[#f4ecde] text-[#3b4044]">
-        <AppWalletProvider>
+        <PrivyProviderWrapper>
           <Navbar />
           <main className="min-h-screen w-full">{children}</main>
           <Footer />
-        </AppWalletProvider>
+        </PrivyProviderWrapper>
       </body>
     </html>
   );

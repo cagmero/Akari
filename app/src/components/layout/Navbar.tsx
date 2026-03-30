@@ -4,18 +4,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, Copy, LogOut } from "lucide-react";
 import { cn } from "@/components/ui/Glass";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { usePrivy } from "@privy-io/react-auth";
 
 const links = [
-  { name: "Yield", href: "/deposit" },
-  { name: "Swap", href: "/swap" },
+  { name: "Pool", href: "/dashboard/pool" },
+  { name: "Swap", href: "/dashboard/fx" },
+  { name: "Yield", href: "/dashboard/yield" },
+  { name: "Admin", href: "/admin" },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { login, logout, authenticated, user } = usePrivy();
 
   return (
     <motion.nav
@@ -78,12 +81,48 @@ export function Navbar() {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-6">
-            <WalletMultiButton className="!bg-[#3b4044] !text-white !rounded-2xl !px-6 !py-3.5 !text-[13px] !font-black !uppercase !tracking-widest !shadow-xl hover:!shadow-2xl hover:!-translate-y-0.5 !transition-all !duration-300" />
+            {!authenticated ? (
+              <button
+                onClick={() => login()}
+                className="bg-[#3b4044] text-white rounded-2xl px-6 py-3.5 text-[13px] font-black uppercase tracking-widest shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto"
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <div className="flex items-center gap-3 bg-[#3b4044]/5 border border-[#3b4044]/10 rounded-2xl px-4 py-2 pointer-events-auto group relative">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#3b4044]/40">Wallet</span>
+                  <span className="text-sm font-bold text-[#3b4044]">
+                    {user?.wallet?.address?.slice(0, 4)}...{user?.wallet?.address?.slice(-4)}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button 
+                    onClick={() => {
+                      if (user?.wallet?.address) {
+                        navigator.clipboard.writeText(user.wallet.address);
+                        alert("Address copied!");
+                      }
+                    }}
+                    className="p-2 hover:bg-[#3b4044]/5 rounded-lg text-[#3b4044]/60 hover:text-[#3b4044] transition-colors"
+                  >
+                    <Copy size={14} />
+                  </button>
+                  <button 
+                    onClick={() => logout()}
+                    className="p-2 hover:bg-red-500/5 rounded-lg text-red-500/60 hover:text-red-500 transition-colors"
+                  >
+                    <LogOut size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2.5 rounded-xl text-[#3b4044]/80 hover:bg-[#3b4044]/5 transition-colors"
+              className="md:hidden p-2.5 rounded-xl text-[#3b4044]/80 hover:bg-[#3b4044]/5 transition-colors pointer-events-auto"
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -120,13 +159,27 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              <Link
-                href="/deposit"
-                onClick={() => setMobileOpen(false)}
-                className="mt-2 px-6 py-4 rounded-2xl text-base font-bold bg-[#3b4044] text-white text-center shadow-lg"
-              >
-                Launch App
-              </Link>
+              {!authenticated ? (
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    login();
+                  }}
+                  className="mt-2 px-6 py-4 rounded-2xl text-base font-bold bg-[#3b4044] text-white text-center shadow-lg"
+                >
+                  Connect Wallet
+                </button>
+              ) : (
+               <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    logout();
+                  }}
+                  className="mt-2 px-6 py-4 rounded-2xl text-base font-bold bg-red-500 text-white text-center shadow-lg"
+                >
+                  Logout
+                </button>
+              )}
             </motion.div>
           </div>
         )}

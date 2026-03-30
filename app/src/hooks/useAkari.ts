@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
-import { AnchorProvider, Program } from '@coral-xyz/anchor';
+import { useConnection } from '@solana/wallet-adapter-react';
+import { useWallets } from "@privy-io/react-auth/solana";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { PublicKey } from '@solana/web3.js';
 import AkariIDL from '../idl/akari.json';
+import type { Akari } from '../idl/akari_type';
 import DevnetAddresses from '../devnet-addresses.json';
 
 export const AKARI_PROGRAM_ID = new PublicKey(DevnetAddresses.AKARI);
@@ -12,25 +14,49 @@ export const CHFC_MINT = new PublicKey(DevnetAddresses.CHFC_MINT);
 
 export function useAkari() {
   const { connection } = useConnection();
-  const wallet = useAnchorWallet();
+  const { wallets } = useWallets();
+  const wallet = wallets[0]; // Primary Privy wallet (embedded or external)
 
-  const provider = useMemo(() => {
+  const memoized = useMemo(() => {
     if (!wallet) return null;
-    return new AnchorProvider(connection, wallet, {
-      preflightCommitment: 'confirmed',
-      commitment: 'confirmed',
-    });
+    
+    // Create an object that matches the Anchor Wallet interface
+    const anchorWallet = {
+      publicKey: new PublicKey(wallet.address),
+      signTransaction: async (tx: any) => {
+        const result = await wallet.signTransaction({ transaction: tx });
+        return result.signedTransaction;
+      },
+      signAllTransactions: async (txs: any[]) => {
+        return await Promise.all(txs.map(async (tx) => {
+            const result = await wallet.signTransaction({ transaction: tx });
+            return result.signedTransaction;
+        }));
+      },
+    };
+
+    return {
+      provider: new AnchorProvider(connection, anchorWallet as any, {
+        preflightCommitment: 'confirmed',
+        commitment: 'confirmed',
+      }),
+      anchorWallet,
+    };
   }, [connection, wallet]);
+
+  const provider = memoized?.provider || null;
+  const anchorWallet = memoized?.anchorWallet || null;
 
   const program = useMemo(() => {
     if (!provider) return null;
-    return new Program(AkariIDL as any, provider);
+    return new Program(AkariIDL as Akari, provider);
   }, [provider]);
 
   return {
     connection,
-    wallet,
+    privyWallet: wallet,
+    wallet: anchorWallet,
     provider,
-    program,
+    program: program as Program<Akari> | null,
   };
 }
