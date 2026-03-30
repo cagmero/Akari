@@ -1,5 +1,17 @@
 [
-  "FHJYAxesexMA6sMg7vb9DfgDg358NqGz6NsM1nQbMJtS",
-  "8wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7f",
-  "4wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7x"
+  {
+    "wallet": "BJg6pEMdqmU3fjPCa5ZFKxkR2f1HKrrnc7tK4TQGYKQq",
+    "kyc_hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "vasp_id": "AMINA-BANK-CH-001"
+  },
+  {
+    "wallet": "8wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7f",
+    "kyc_hash": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3",
+    "vasp_id": "CORP-DE-001"
+  },
+  {
+    "wallet": "4wVvHGEzB9GjBKhX2LgR6JmR5aJ6ZkZ7pYjRnFmLVn7x",
+    "kyc_hash": "c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+    "vasp_id": "CORP-SG-001"
+  }
 ]

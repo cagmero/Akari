@@ -1,0 +1,93 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const anchor = __importStar(require("@coral-xyz/anchor"));
+const web3_js_1 = require("@solana/web3.js");
+const fs_1 = __importDefault(require("fs"));
+const leader_election_1 = require("./leader-election");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const STANDBY_KEY_PATH = process.env.STANDBY_KEY_PATH || '../standby-keypair.json';
+const IDL_PATH = '../app/src/idl/akari.json';
+async function main() {
+    console.log("Starting Standby Oracle Relay Service...");
+    if (!fs_1.default.existsSync(STANDBY_KEY_PATH)) {
+        throw new Error(`Standby keypair not found at ${STANDBY_KEY_PATH}`);
+    }
+    const secretKeyString = fs_1.default.readFileSync(STANDBY_KEY_PATH, { encoding: 'utf8' });
+    const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+    const wallet = new anchor.Wallet(web3_js_1.Keypair.fromSecretKey(secretKey));
+    const connection = new web3_js_1.Connection(process.env.RPC_URL || 'https://api.devnet.solana.com', 'confirmed');
+    const provider = new anchor.AnchorProvider(connection, wallet, { commitment: 'confirmed' });
+    anchor.setProvider(provider);
+    if (!fs_1.default.existsSync(IDL_PATH)) {
+        throw new Error(`IDL not found at ${IDL_PATH}`);
+    }
+    const idl = JSON.parse(fs_1.default.readFileSync(IDL_PATH, 'utf8'));
+    const program = new anchor.Program(idl, provider);
+    let isRunning = true;
+    let fallbackAsPrimary = false;
+    process.on('SIGINT', () => {
+        console.log("Shutting down Standby Oracle gracefully...");
+        isRunning = false;
+    });
+    while (isRunning) {
+        try {
+            const hasLock = await (0, leader_election_1.acquireOrRenewLock)(program, wallet);
+            if (hasLock && !fallbackAsPrimary) {
+                console.log("[Standby] \u26A0\uFE0F ATTENTION \u26A0\uFE0F Acquired lock! Primary has failed.");
+                console.log("[Standby] Taking over as Primary Oracle. (Real impl extends index.ts logic here)");
+                fallbackAsPrimary = true;
+            }
+            else if (hasLock && fallbackAsPrimary) {
+                console.log("[Standby] Successfully renewed lock as fallback primary.");
+            }
+            else {
+                console.log("[Standby] Lock is healthy. Primary is operating normally. Sleeping 15s...");
+                fallbackAsPrimary = false;
+            }
+        }
+        catch (e) {
+            console.error(`[Standby] Error:`, e.message);
+        }
+        if (isRunning) {
+            await new Promise(r => setTimeout(r, 15000));
+        }
+    }
+}
+main().catch(console.error);

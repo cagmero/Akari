@@ -47,7 +47,10 @@ function buildTree(leaves: Uint8Array[]): any {
 
 async function main() {
     const data = fs.readFileSync('./wallet-list.json', 'utf8');
-    const wallets = JSON.parse(data) as string[];
+    const rawData = JSON.parse(data);
+    const wallets = Array.isArray(rawData) && typeof rawData[0] === 'object' 
+        ? rawData.map((item: any) => item.wallet) 
+        : rawData as string[];
 
     // ENFORCE STRICT 8 WALLET LIMIT (Merkle Compute Fix)
     if (wallets.length > 8) {

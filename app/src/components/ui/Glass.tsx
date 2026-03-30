@@ -36,7 +36,8 @@ GlassCard.displayName = "GlassCard";
 export const GlassButton = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: "default" | "accent" | "dark";
+    variant?: "default" | "accent" | "dark" | "subtle";
+    icon?: React.ElementType;
   }
 >(({ className, variant = "default", ...props }, ref) => {
   const variantClasses = {
@@ -46,6 +47,8 @@ export const GlassButton = React.forwardRef<
       "bg-gradient-to-r from-[#d95000] to-[#ffb43f] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5",
     dark:
       "bg-gradient-to-r from-[#3b4044] to-[#4a5056] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5",
+    subtle:
+      "bg-[#3b4044]/5 text-[#3b4044] hover:bg-[#3b4044]/10 border border-[#3b4044]/10",
   };
 
   return (
@@ -54,11 +57,15 @@ export const GlassButton = React.forwardRef<
       className={cn(
         "rounded-2xl px-10 py-5 font-black text-sm transition-all duration-300",
         "disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]",
-        variantClasses[variant],
+        "flex items-center justify-center gap-2",
+        variantClasses[variant as keyof typeof variantClasses],
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+      {props.icon && <props.icon className="w-4 h-4" />}
+    </button>
   );
 });
 GlassButton.displayName = "GlassButton";

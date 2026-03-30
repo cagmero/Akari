@@ -42,7 +42,7 @@ const features = [
       "Automatically routes idle capital to Kamino Finance reserve pools for risk-adjusted returns with institutional security.",
     color: "#d95000",
     gradient: "from-[#d95000]/20 to-[#ffb43f]/10",
-    href: "/deposit",
+    href: "/app",
   },
   {
     icon: Zap,
@@ -51,7 +51,7 @@ const features = [
       "Best-in-class liquidity routing ensures maximum efficiency for massive corporate treasury FX swaps.",
     color: "#ffb43f",
     gradient: "from-[#ffb43f]/20 to-[#e3be81]/10",
-    href: "/swap",
+    href: "/app/fx",
   },
   {
     icon: ShieldCheck,
@@ -60,7 +60,7 @@ const features = [
       "Multi-layer verification via Token-2022 Transfer Hooks ensuring every transaction meets global compliance standards.",
     color: "#d357fe",
     gradient: "from-[#d357fe]/20 to-[#9b59b6]/10",
-    href: "/",
+    href: "/app",
   },
 ];
 
@@ -149,17 +149,17 @@ export default function Home() {
               className="mt-12 flex flex-col sm:flex-row gap-4"
             >
               <Link
-                href="/deposit"
+                href="/app"
                 className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-base font-black bg-[#3b4044] text-white shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-1"
               >
-                Start Deploying
+                Launch App
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/swap"
+                href="/app/fx"
                 className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-base font-bold liquid-glass-strong text-[#3b4044]/80 hover:bg-white/40 transition-all duration-300"
               >
-                Explore Swaps
+                Institutional FX
               </Link>
             </motion.div>
           </div>
@@ -301,14 +301,14 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
-                    href="/deposit"
+                    href="/app"
                     className="inline-flex items-center justify-center gap-3 px-12 py-6 rounded-2xl text-lg font-black bg-[#3b4044] text-white shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-1"
                   >
-                    Deploy Capital
+                    Launch App
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                   <Link
-                    href="/swap"
+                    href="/app/fx"
                     className="inline-flex items-center justify-center gap-3 px-12 py-6 rounded-2xl text-lg font-bold liquid-glass-strong text-[#3b4044] hover:bg-white/40 transition-all duration-300 shadow-xl"
                   >
                     Explore FX

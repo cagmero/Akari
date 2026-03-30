@@ -7,6 +7,8 @@
     "resolveJsonModule": true,
     "strict": true,
     "types": ["node"],
-    "lib": ["es2022", "dom"]
+    "lib": ["es2022", "dom"],
+    "outDir": "./dist",
+    "ignoreDeprecations": "6.0"
   }
 }
