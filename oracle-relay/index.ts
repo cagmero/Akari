@@ -7,11 +7,11 @@ import { submitPriceOnChain } from './submitter';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const ORACLE_KEY_PATH = process.env.ORACLE_KEY_PATH || '../oracle-keypair.json';
-const IDL_PATH = '../app/src/idl/akari.json';
+const ORACLE_KEY_PATH = process.env.ORACLE_KEY_PATH || './oracle-keypair.json';
+const IDL_PATH = './app/src/idl/akari.json';
 const PAIRS = [
-    { code: '946681_149', pdaSeed: 'EUR_USDP' },
-    { code: '275164_149', pdaSeed: 'CHF_USDP' }
+    { code: 'USDEURSP', pdaSeed: 'EUR_USDP' },
+    { code: 'USDCHFSP', pdaSeed: 'CHF_USDP' }
 ];
 
 async function main() {
@@ -57,8 +57,6 @@ async function main() {
                         pair.pdaSeed,
                         price.bid,
                         price.ask,
-                        price.mid,
-                        price.spread_bps,
                         price.timestamp
                     );
                 }

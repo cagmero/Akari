@@ -42,8 +42,8 @@ const fs_1 = __importDefault(require("fs"));
 const leader_election_1 = require("./leader-election");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const STANDBY_KEY_PATH = process.env.STANDBY_KEY_PATH || '../standby-keypair.json';
-const IDL_PATH = '../app/src/idl/akari.json';
+const STANDBY_KEY_PATH = process.env.STANDBY_KEY_PATH || './standby-keypair.json';
+const IDL_PATH = './app/src/idl/akari.json';
 async function main() {
     console.log("Starting Standby Oracle Relay Service...");
     if (!fs_1.default.existsSync(STANDBY_KEY_PATH)) {

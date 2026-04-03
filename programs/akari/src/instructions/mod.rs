@@ -13,6 +13,7 @@ pub mod harvest_yield;
 pub mod flag_wallet;
 pub mod pause_pool;
 pub mod travel_rule_attach;
+pub mod update_oracle_authority;
 
 pub use initialize_pool::*;
 pub use initialize_epoch_state::*;
@@ -28,4 +29,5 @@ pub use deploy_yield::*;
 pub use harvest_yield::*;
 pub use flag_wallet::*;
 pub use pause_pool::*;
+pub use update_oracle_authority::*;
 pub use travel_rule_attach::*;

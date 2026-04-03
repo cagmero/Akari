@@ -109,9 +109,9 @@ async function main() {
             tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .remainingAccounts([
+            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
             { pubkey: extraMetaUsdc, isWritable: false, isSigner: false },
             { pubkey: kycRootPda, isWritable: false, isSigner: false },
-            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
         ])
         .signers([germany.keypair])
         .rpc();
@@ -131,9 +131,9 @@ async function main() {
             tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .remainingAccounts([
+            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
             { pubkey: extraMetaEurc, isWritable: false, isSigner: false },
             { pubkey: kycRootPda, isWritable: false, isSigner: false },
-            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
         ])
         .signers([singapore.keypair])
         .rpc();
@@ -166,9 +166,9 @@ async function main() {
             tokenProgram: TOKEN_2022_PROGRAM_ID,
         })
         .remainingAccounts([
+            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
             { pubkey: extraMetaUsdc, isWritable: false, isSigner: false },
             { pubkey: kycRootPda, isWritable: false, isSigner: false },
-            { pubkey: HOOK_PROGRAM_ID, isWritable: false, isSigner: false },
         ])
         .signers([germany.keypair])
         .rpc();

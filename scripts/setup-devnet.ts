@@ -16,6 +16,19 @@ async function main() {
     const secretKey = Uint8Array.from(JSON.parse(secretKeyStr));
     const authority = Keypair.fromSecretKey(secretKey);
 
+    // Load oracle keypair for oracle_authority
+    const oracleKeyPath = path.join(__dirname, '..', 'oracle-keypair.json');
+    let oracleAuthority = authority.publicKey; // default to dev wallet
+    if (fs.existsSync(oracleKeyPath)) {
+        const oracleSecretStr = fs.readFileSync(oracleKeyPath, 'utf8');
+        const oracleSecret = Uint8Array.from(JSON.parse(oracleSecretStr));
+        const oracleKeypair = Keypair.fromSecretKey(oracleSecret);
+        oracleAuthority = oracleKeypair.publicKey;
+        console.log(`  Using oracle authority: ${oracleAuthority.toBase58()}`);
+    } else {
+        console.warn(`  Oracle keypair not found at ${oracleKeyPath}, using dev wallet as oracle_authority`);
+    }
+
     const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
     const wallet = new anchor.Wallet(authority);
     const provider = new anchor.AnchorProvider(connection, wallet, { commitment: 'confirmed' });
@@ -36,7 +49,7 @@ async function main() {
     if (!poolInfo) {
         // args: oracle_authority, travel_rule_threshold, daily_limit_usdc, max_slippage_bps
         await akariProgram.methods.initializePool(
-            authority.publicKey,
+            oracleAuthority,
             new anchor.BN(1000 * 1_000_000), // 1000 USDC threshold
             new anchor.BN(50_000 * 1_000_000), // 50k USDC limit
             100 // 1%
@@ -49,6 +62,23 @@ async function main() {
         console.log("  => PoolVault initialized");
     } else {
         console.log("  => PoolVault already exists");
+        // Check if oracle_authority needs to be updated
+        try {
+            const poolAccount = await akariProgram.account.poolVault.fetch(poolVaultPda);
+            if (poolAccount.oracleAuthority.toBase58() !== oracleAuthority.toBase58()) {
+                console.log(`  Updating oracle_authority from ${poolAccount.oracleAuthority.toBase58()} to ${oracleAuthority.toBase58()}`);
+                await akariProgram.methods.updateOracleAuthority(oracleAuthority)
+                    .accounts({
+                        poolVault: poolVaultPda,
+                        authority: authority.publicKey,
+                    }).rpc();
+                console.log("  => Oracle authority updated");
+            } else {
+                console.log("  => Oracle authority already correct");
+            }
+        } catch (e) {
+            console.error("  Failed to fetch or update pool vault:", e);
+        }
     }
 
     console.log("2. Initialize OracleRelayLock");

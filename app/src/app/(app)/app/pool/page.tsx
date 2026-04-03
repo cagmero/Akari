@@ -120,7 +120,10 @@ export default function PoolPage() {
     }
   };
 
-  const decodeString = (arr: number[]) => new TextDecoder().decode(Uint8Array.from(arr)).replace(/\0/g, '');
+  const decodeString = (arr: number[]) => {
+    if (!arr || !Array.isArray(arr)) return '---';
+    return new TextDecoder().decode(Uint8Array.from(arr)).replace(/\0/g, '');
+  };
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_450px] gap-8 max-w-[1400px] mx-auto">

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { GlassCard, GlassBadge, cn } from "@/components/ui/Glass";
 
 const fadeUp = {
@@ -71,6 +72,7 @@ const stats = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="flex flex-col w-full min-h-screen">
       {/* ─── HERO ─── */}
@@ -148,13 +150,13 @@ export default function Home() {
               transition={{ delay: 0.65, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="mt-12 flex flex-col sm:flex-row gap-4"
             >
-              <Link
-                href="/app"
+              <button
+                onClick={() => router.push('/app')}
                 className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-base font-black bg-[#3b4044] text-white shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-1"
               >
                 Launch App
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </button>
               <Link
                 href="/app/fx"
                 className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-base font-bold liquid-glass-strong text-[#3b4044]/80 hover:bg-white/40 transition-all duration-300"
@@ -300,13 +302,13 @@ export default function Home() {
                   institutional compliance, built on the speed of Solana.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    href="/app"
+                  <button
+                    onClick={() => router.push('/app')}
                     className="inline-flex items-center justify-center gap-3 px-12 py-6 rounded-2xl text-lg font-black bg-[#3b4044] text-white shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-1"
                   >
                     Launch App
                     <ArrowRight className="w-5 h-5" />
-                  </Link>
+                  </button>
                   <Link
                     href="/app/fx"
                     className="inline-flex items-center justify-center gap-3 px-12 py-6 rounded-2xl text-lg font-bold liquid-glass-strong text-[#3b4044] hover:bg-white/40 transition-all duration-300 shadow-xl"

@@ -6,8 +6,6 @@ export async function submitPriceOnChain(
     currencyPair: string,
     bid: number,
     ask: number,
-    mid: number,
-    spreadBps: number,
     publishedAt: number
 ): Promise<string | null> {
     try {
@@ -36,8 +34,6 @@ export async function submitPriceOnChain(
             pairBytes,
             new anchor.BN(bid),
             new anchor.BN(ask),
-            new anchor.BN(mid),
-            spreadBps,
             new anchor.BN(publishedAt)
         ).accounts({
             oracleAuthority: wallet.publicKey,
@@ -47,7 +43,7 @@ export async function submitPriceOnChain(
             systemProgram: anchor.web3.SystemProgram.programId,
         }).rpc();
 
-        console.log(`[Submitter] Successfully updated ${currencyPair} | Mid: ${mid/1000000} | Spread: ${spreadBps}bps | Tx: ${tx}`);
+        console.log(`[Submitter] Successfully updated ${currencyPair} | Bid: ${bid/1_000_000} | Ask: ${ask/1_000_000} | Tx: ${tx}`);
         return tx;
     } catch (e: any) {
         console.error(`[Submitter] Error updating ${currencyPair}:`, e.message);

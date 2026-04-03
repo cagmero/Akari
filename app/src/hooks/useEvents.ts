@@ -9,15 +9,12 @@ export function useEvents() {
   const eventsRef = useRef<any[]>([]);
 
   useEffect(() => {
-    if (!program || !provider) return;
+    if (!program || !provider?.connection) return;
 
-    // Initial fetch of recent signatures
     const fetchHistory = async () => {
       try {
+        if (!provider?.connection) return;
         const sigs = await provider.connection.getSignaturesForAddress(AKARI_PROGRAM_ID, { limit: 50 });
-        // In a real app, you would fetch and parse transactions here.
-        // For this MVP, we rely on the live subscription for the "Active Feed" 
-        // and let the Audit page do the heavy historical lifting.
       } catch (e) {
         console.error("Failed to fetch event history", e);
       }
@@ -25,29 +22,37 @@ export function useEvents() {
 
     fetchHistory();
 
-    // Subscribe to ALL program events using Anchor 
-    // This parses the logs automatically based on the IDL
-    const listenerId = program.addEventListener("TransferEvent", (event, slot, signature) => {
-        handleNewEvent({ type: "Deposit", ...event, signature, time: Date.now() });
-    });
-    
-    const listenerId2 = program.addEventListener("FxSwapEvent", (event, slot, signature) => {
-        handleNewEvent({ type: "Swap", ...event, signature, time: Date.now() });
-    });
-
-    const listenerId3 = program.addEventListener("YieldDeployedEvent", (event, slot, signature) => {
-        handleNewEvent({ type: "Yield", ...event, signature, time: Date.now() });
-    });
-
     const handleNewEvent = (event: any) => {
         eventsRef.current = [event, ...eventsRef.current].slice(0, 20);
         setEvents([...eventsRef.current]);
     };
 
+    let listenerId: number | null = null;
+    let listenerId2: number | null = null;
+    let listenerId3: number | null = null;
+
+    try {
+        listenerId = program.addEventListener("transferEvent", (event, slot, signature) => {
+            handleNewEvent({ type: "Deposit", ...event, signature, time: Date.now() });
+        });
+        
+        listenerId2 = program.addEventListener("fxSwapEvent", (event, slot, signature) => {
+            handleNewEvent({ type: "Swap", ...event, signature, time: Date.now() });
+        });
+
+        listenerId3 = program.addEventListener("yieldDeployedEvent", (event, slot, signature) => {
+            handleNewEvent({ type: "Yield", ...event, signature, time: Date.now() });
+        });
+    } catch (e) {
+        console.error("Failed to setup event listeners", e);
+    }
+
     return () => {
-      program.removeEventListener(listenerId);
-      program.removeEventListener(listenerId2);
-      program.removeEventListener(listenerId3);
+      if (program) {
+        if (listenerId !== null) program.removeEventListener(listenerId);
+        if (listenerId2 !== null) program.removeEventListener(listenerId2);
+        if (listenerId3 !== null) program.removeEventListener(listenerId3);
+      }
     };
   }, [program, provider]);
 

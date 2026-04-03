@@ -132,4 +132,11 @@ pub mod akari {
     pub fn pause_pool(ctx: Context<PausePool>, paused: bool) -> Result<()> {
         instructions::pause_pool::handle(ctx, paused)
     }
+
+    pub fn update_oracle_authority(
+        ctx: Context<UpdateOracleAuthority>,
+        new_oracle_authority: Pubkey,
+    ) -> Result<()> {
+        instructions::update_oracle_authority::handle(ctx, new_oracle_authority)
+    }
 }

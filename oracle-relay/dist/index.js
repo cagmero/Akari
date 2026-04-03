@@ -44,8 +44,8 @@ const leader_election_1 = require("./leader-election");
 const submitter_1 = require("./submitter");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const ORACLE_KEY_PATH = process.env.ORACLE_KEY_PATH || '../oracle-keypair.json';
-const IDL_PATH = '../app/src/idl/akari.json';
+const ORACLE_KEY_PATH = process.env.ORACLE_KEY_PATH || './oracle-keypair.json';
+const IDL_PATH = './app/src/idl/akari.json';
 const PAIRS = [
     { code: '946681_149', pdaSeed: 'EUR_USDP' },
     { code: '275164_149', pdaSeed: 'CHF_USDP' }
@@ -81,7 +81,7 @@ async function main() {
             else {
                 for (const pair of PAIRS) {
                     const price = await sixClient.fetchFxRates(pair.code);
-                    await (0, submitter_1.submitPriceOnChain)(program, wallet, pair.pdaSeed, price.bid, price.ask, price.mid, price.spread_bps, price.timestamp);
+                    await (0, submitter_1.submitPriceOnChain)(program, wallet, pair.pdaSeed, price.bid, price.ask, price.timestamp);
                 }
                 const gold = await sixClient.fetchGoldPrice();
                 console.log(`[Relay] Fetched Gold Price: $${gold.price}`);

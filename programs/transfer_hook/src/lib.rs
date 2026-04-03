@@ -16,8 +16,8 @@ declare_id!("3wiyy4Gxcgnpg1Gj7jMLhG4HRTtZmwpNveoLM6LQJUYz");
 pub mod transfer_hook {
     use super::*;
 
-    pub fn execute(ctx: Context<Execute>, amount: u64, proof: Vec<[u8; 32]>) -> Result<()> {
-        execute::handle(ctx, amount, proof)
+    pub fn execute(ctx: Context<Execute>, amount: u64) -> Result<()> {
+        execute::handle(ctx, amount)
     }
 
     pub fn update_kyc_root(ctx: Context<UpdateKycRoot>, new_root: [u8; 32], new_leaf_count: u64) -> Result<()> {

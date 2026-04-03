@@ -10,10 +10,15 @@ import {
   History,
   ShieldCheck,
   LogOut,
-  Copy
+  Copy,
+  ChevronUp,
+  ExternalLink,
+  User as UserIcon
 } from "lucide-react";
 import { cn } from "@/components/ui/Glass";
 import { usePrivy } from "@privy-io/react-auth";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "Overview", href: "/app", icon: LayoutDashboard },
@@ -26,8 +31,14 @@ const navLinks = [
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = usePrivy();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   const walletAddress = user?.wallet?.address || "Disconnected";
+
+  const copyAddress = () => {
+    navigator.clipboard.writeText(walletAddress);
+    alert("Address copied!");
+  };
 
   return (
     <aside className="w-[240px] h-screen bg-white/40 border-r border-[#3b4044]/10 flex flex-col relative z-50 shrink-0 backdrop-blur-xl">
@@ -69,45 +80,68 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Pinned Bottom */}
-      <div className="p-4 space-y-4 border-t border-[#3b4044]/5">
-        <div className="bg-[#3b4044]/5 border border-[#3b4044]/10 rounded-[1.5rem] p-4 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#3b4044]/40">Wallet</span>
-              <span className="text-xs font-black text-[#3b4044] tabular-nums">
-                {walletAddress.slice(0, 4)}...{walletAddress.slice(-4)}
-              </span>
-            </div>
-            <button 
-                onClick={() => {
-                   navigator.clipboard.writeText(walletAddress);
-                   alert("Address copied!");
-                }}
-                className="p-2 hover:bg-[#3b4044]/5 rounded-lg text-[#3b4044]/30 hover:text-[#3b4044] transition-all"
+      {/* Account / Wallet Dropdown */}
+      <div className="p-4 relative">
+        <AnimatePresence>
+          {isAccountOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="absolute bottom-[calc(100%-8px)] left-4 right-4 bg-white/80 backdrop-blur-2xl border border-[#3b4044]/10 rounded-[2rem] p-3 shadow-2xl z-50 overflow-hidden"
             >
-              <Copy size={14} />
-            </button>
-          </div>
-          
-          <div className="flex items-center gap-2">
-             <div className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-[9px] font-black text-emerald-600 uppercase tracking-widest">
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-               Devnet
-             </div>
-             <div className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-[#3b4044]/5 border border-[#3b4044]/10 rounded-lg text-[9px] font-black text-[#3b4044]/40 uppercase tracking-widest">
-               <ShieldCheck size={10} />
-               Fireblocks
-             </div>
-          </div>
-        </div>
+              <div className="flex flex-col gap-1">
+                <button 
+                  onClick={copyAddress}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#3b4044]/60 hover:bg-[#3b4044]/5 hover:text-[#3b4044] transition-all"
+                >
+                  <Copy size={14} />
+                  Copy Address
+                </button>
+                <a 
+                  href={`https://explorer.solana.com/address/${walletAddress}?cluster=devnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#3b4044]/60 hover:bg-[#3b4044]/5 hover:text-[#3b4044] transition-all text-left"
+                >
+                  <ExternalLink size={14} />
+                  View Explorer
+                </a>
+                <div className="h-px bg-[#3b4044]/5 my-1 mx-2" />
+                <button 
+                  onClick={() => logout()}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-500/60 hover:bg-red-500/5 hover:text-red-600 transition-all"
+                >
+                  <LogOut size={14} />
+                  Disconnect
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <button 
-          onClick={() => logout()}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-black text-red-500/60 hover:text-red-600 hover:bg-red-500/5 transition-all transition-all duration-300 pointer-events-auto"
+        <button
+          onClick={() => setIsAccountOpen(!isAccountOpen)}
+          className={cn(
+            "w-full bg-white/40 hover:bg-white/60 border border-[#3b4044]/10 rounded-[1.75rem] p-4 flex items-center justify-between transition-all duration-300 group shadow-sm",
+            isAccountOpen && "bg-white/80 border-[#3b4044]/20 shadow-md ring-4 ring-[#3b4044]/[0.02]"
+          )}
         >
-          <LogOut size={16} />
-          Disconnect
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-full bg-[#3b4044]/5 flex items-center justify-center border border-[#3b4044]/10 group-hover:scale-105 transition-transform">
+                <UserIcon size={18} className="text-[#3b4044]/60" />
+             </div>
+             <div className="flex flex-col text-left">
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#3b4044]/40">Active Institutional Wallet</span>
+                <span className="text-xs font-black text-[#3b4044] tabular-nums">
+                  {walletAddress.slice(0, 4)}...{walletAddress.slice(-4)}
+                </span>
+             </div>
+          </div>
+          <ChevronUp 
+            size={16} 
+            className={cn("text-[#3b4044]/20 transition-transform duration-500", isAccountOpen && "rotate-180")} 
+          />
         </button>
       </div>
     </aside>

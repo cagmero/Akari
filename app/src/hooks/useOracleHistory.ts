@@ -12,7 +12,7 @@ export function useOracleHistory(pair: string) {
         historyRef.current = [
           ...historyRef.current,
           { 
-            price: priceFeed.price.toNumber() / 1_000_000, 
+            price: priceFeed.mid.toNumber() / 1_000_000, 
             timestamp: priceFeed.submittedAt.toNumber() 
           }
         ].slice(-60); // Cap at 60 points

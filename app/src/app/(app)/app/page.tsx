@@ -16,7 +16,8 @@ import {
   ArrowDownRight,
   Flame,
   Globe,
-  CircleDollarSign
+  CircleDollarSign,
+  Zap
 } from "lucide-react";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,7 +27,7 @@ import { cn } from "@/components/ui/Glass";
 export default function OverviewPage() {
   const { poolVault } = usePool();
   const { subsidiaries } = useSubsidiaries();
-  const { events } = useEvents();
+  const events = useEvents();
   const { epochState: eurUsdEpoch } = useEpochState("EUR_USD");
   const { epochState: chfUsdEpoch } = useEpochState("CHF_USD");
   const { priceFeed: goldPrice } = useSixPrice("XAU_USD");
@@ -37,10 +38,22 @@ export default function OverviewPage() {
   const poolUsdc = poolVault ? poolVault.totalUsdc.toNumber() / 1_000_000 : 0;
   const poolEurc = poolVault ? poolVault.totalEurc.toNumber() / 1_000_000 : 0;
   const activeSubsScount = subsidiaries.length;
+  const getSlippagePercent = (state: any) => {
+    if (!state) return 0;
+    const totalBudget = (state.vaultNavSnapshotUsdc.toNumber() * state.maxEpochSlippageBps) / 10_000;
+    if (totalBudget === 0) return 0;
+    return (state.epochAccumulatedSlippage.toNumber() / totalBudget) * 100;
+  };
+
   const slippageMax = Math.max(
-     eurUsdEpoch ? (eurUsdEpoch.consumedBudget.toNumber() / eurUsdEpoch.totalBudget.toNumber()) * 100 : 0,
-     chfUsdEpoch ? (chfUsdEpoch.consumedBudget.toNumber() / chfUsdEpoch.totalBudget.toNumber()) * 100 : 0
+     getSlippagePercent(eurUsdEpoch),
+     getSlippagePercent(chfUsdEpoch)
   );
+
+  const decodeString = (arr: number[]) => {
+    if (!arr || !Array.isArray(arr)) return '---';
+    return new TextDecoder().decode(Uint8Array.from(arr)).replace(/\0/g, '');
+  };
 
   return (
     <div className="space-y-8 max-w-[1600px] mx-auto">
@@ -87,11 +100,11 @@ export default function OverviewPage() {
                   <tr key={sub.publicKey.toBase58()} className="group hover:bg-[#3b4044]/[0.02] cursor-pointer transition-all">
                      <td className="py-5 text-sm">
                         <Link href={`/app/pool?entity=${sub.publicKey.toBase58()}`}>
-                           {new TextDecoder().decode(Uint8Array.from(sub.account.name)).replace(/\0/g, '')}
+                           {decodeString(sub.account.name)}
                         </Link>
                      </td>
                      <td className="py-5 text-[10px] text-[#3b4044]/40 uppercase tracking-widest">
-                       {new TextDecoder().decode(Uint8Array.from(sub.account.jurisdiction)).replace(/\0/g, '')}
+                       {decodeString(sub.account.jurisdiction)}
                      </td>
                      <td className="py-5 text-sm text-right tabular-nums">
                         ${(sub.account.usdcBalance.toNumber() / 1_000_000).toLocaleString()}
@@ -189,7 +202,7 @@ function StatCard({ label, value, delta, icon: Icon, isNegativeBetter }: any) {
 
 function MarketSection({ label, pair, history, color, isGold }: any) {
   const { priceFeed } = useSixPrice(pair || "XAU_USD");
-  const value = priceFeed ? (priceFeed.price.toNumber() / 1_000_000).toFixed(4) : "---";
+  const value = priceFeed ? (priceFeed.mid.toNumber() / 1_000_000).toFixed(4) : "---";
 
   return (
     <div className="flex-1 px-4 lg:px-8 space-y-6">

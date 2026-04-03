@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.submitPriceOnChain = submitPriceOnChain;
 const anchor = __importStar(require("@coral-xyz/anchor"));
-async function submitPriceOnChain(program, wallet, currencyPair, bid, ask, mid, spreadBps, publishedAt) {
+async function submitPriceOnChain(program, wallet, currencyPair, bid, ask, publishedAt) {
     try {
         const pairBuf = Buffer.from(currencyPair);
         if (pairBuf.length !== 8) {
@@ -45,14 +45,14 @@ async function submitPriceOnChain(program, wallet, currencyPair, bid, ask, mid, 
         const [priceFeedPda] = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from('six_price_feed'), pairBuf], program.programId);
         const [poolVaultPda] = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from('pool_vault')], program.programId);
         const [relayLockPda] = anchor.web3.PublicKey.findProgramAddressSync([Buffer.from('oracle_relay_lock')], program.programId);
-        const tx = await program.methods.updateFxRate(pairBytes, new anchor.BN(bid), new anchor.BN(ask), new anchor.BN(mid), spreadBps, new anchor.BN(publishedAt)).accounts({
+        const tx = await program.methods.updateFxRate(pairBytes, new anchor.BN(bid), new anchor.BN(ask), new anchor.BN(publishedAt)).accounts({
             oracleAuthority: wallet.publicKey,
             sixPriceFeed: priceFeedPda,
             poolVault: poolVaultPda,
             oracleRelayLock: relayLockPda,
             systemProgram: anchor.web3.SystemProgram.programId,
         }).rpc();
-        console.log(`[Submitter] Successfully updated ${currencyPair} | Mid: ${mid / 1000000} | Spread: ${spreadBps}bps | Tx: ${tx}`);
+        console.log(`[Submitter] Successfully updated ${currencyPair} | Bid: ${bid / 1_000_000} | Ask: ${ask / 1_000_000} | Tx: ${tx}`);
         return tx;
     }
     catch (e) {

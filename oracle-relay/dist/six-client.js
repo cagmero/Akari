@@ -10,8 +10,8 @@ const https_1 = __importDefault(require("https"));
 class SixClient {
     client;
     constructor() {
-        const certPath = process.env.SIX_CERT_PATH || './certs/CH56655-api2026hack29/signed-certificate.pem';
-        const keyPath = process.env.SIX_KEY_PATH || './certs/CH56655-api2026hack29/private-key.pem';
+        const certPath = process.env.SIX_CERT_PATH || './oracle-relay/certs/CH56655-api2026hack29/signed-certificate.pem';
+        const keyPath = process.env.SIX_KEY_PATH || './oracle-relay/certs/CH56655-api2026hack29/private-key.pem';
         let cert, key;
         try {
             cert = fs_1.default.readFileSync(certPath);

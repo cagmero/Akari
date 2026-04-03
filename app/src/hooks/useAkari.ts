@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useConnection } from '@solana/wallet-adapter-react';
 import { useWallets } from "@privy-io/react-auth/solana";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, Connection } from '@solana/web3.js';
 import AkariIDL from '../idl/akari.json';
 import type { Akari } from '../idl/akari_type';
 import DevnetAddresses from '../devnet-addresses.json';
@@ -13,9 +13,9 @@ export const EURC_MINT = new PublicKey(DevnetAddresses.EURC_MINT);
 export const CHFC_MINT = new PublicKey(DevnetAddresses.CHFC_MINT);
 
 export function useAkari() {
-  const { connection } = useConnection();
+  const connection = useMemo(() => new Connection('https://api.devnet.solana.com', 'confirmed'), []);
   const { wallets } = useWallets();
-  const wallet = wallets[0]; // Primary Privy wallet (embedded or external)
+  const wallet = wallets[0]; 
 
   const memoized = useMemo(() => {
     if (!wallet) return null;

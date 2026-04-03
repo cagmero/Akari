@@ -5,8 +5,8 @@ import { acquireOrRenewLock } from './leader-election';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const STANDBY_KEY_PATH = process.env.STANDBY_KEY_PATH || '../standby-keypair.json';
-const IDL_PATH = '../app/src/idl/akari.json';
+const STANDBY_KEY_PATH = process.env.STANDBY_KEY_PATH || './standby-keypair.json';
+const IDL_PATH = './app/src/idl/akari.json';
 
 async function main() {
     console.log("Starting Standby Oracle Relay Service...");
